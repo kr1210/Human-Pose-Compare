@@ -8,7 +8,18 @@ import posenet
 from pose import Pose
 from score import Score
 import pickle
+import argparse
 
+#USAGE : python3 keypoints_from_video.py --activity "punch - side" --video "test.mp4" 
+
+ap = argparse.ArgumentParser()
+ap.add_argument("-a", "--activity", required=True,
+	help="activity to be recorder")
+ap.add_argument("-v", "--video", required=True,
+	help="video file from which keypoints are to be extracted")
+ap.add_argument("-l", "--lookup", default="lookup_new.pickle",
+	help="The pickle file to dump the lookup table")
+args = vars(ap.parse_args())
 
 
 
@@ -21,7 +32,7 @@ def main():
 	with tf.Session() as sess:
 		model_cfg, model_outputs = posenet.load_model(101, sess)
 		
-		cap = cv2.VideoCapture("test.mp4")
+		cap = cv2.VideoCapture(args["video"])
 		i = 1
 
 		if cap.isOpened() is False:
@@ -30,7 +41,7 @@ def main():
 			ret_val, image = cap.read()
 			if ret_val:
 				image = cv2.resize(image,(372,495))			
-				input_points,input_black_image = a.getpoints(image,sess,model_cfg,model_outputs)
+				input_points,input_black_image = a.getpoints_vis(image,sess,model_cfg,model_outputs)
 				input_points = input_points[0:34]
 				print(input_points)
 				input_new_coords = a.roi(input_points)
@@ -50,8 +61,9 @@ def main():
 		cv2.destroyAllWindows
 		print(b)
 		print(b.shape)
-		c['punch - side'] = b
-		f = open('lookup_test.pickle','wb')
+		print("Lookup Table Created")
+		c[args["activity"]] = b
+		f = open(args["lookup"],'wb')
 		pickle.dump(c,f)
 		# pickle.dump()
 
