@@ -23,4 +23,7 @@ python keypoints_from_video.py --activity "punch - side" --video "test.mp4" --lo
 Then, in order to use this new lookup, run:
 ```
 python start_here.py --activity "punch - side" --video "test.mp4" --lookup "lookup_new.pickle"/[YOUR_LOOKUP_NAME]
+
+### Acknowledgements
+The Posenet model used in this repo was implemented  here : https://github.com/rwightman/posenet-python
 ```
