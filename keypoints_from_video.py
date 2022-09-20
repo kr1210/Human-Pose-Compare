@@ -29,7 +29,7 @@ def main():
 	c = {}
 	
 	
-	with tf.Session() as sess:
+	with tf.compat.v1.Session() as sess:
 		model_cfg, model_outputs = posenet.load_model(101, sess)
 		
 		cap = cv2.VideoCapture(args["video"])
